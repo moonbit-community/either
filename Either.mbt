@@ -1,4 +1,5 @@
 ///|
+/// Inspired by Haskell's Either and Rust's either library, this enum represents a value that can be one of two types.
 pub(all) enum Either[L, R] {
   Left(L)
   Right(R)
