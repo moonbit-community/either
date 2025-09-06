@@ -534,6 +534,19 @@ pub fn[L, R, T] Either::either(
 }
 
 ///|
+/// Applies a function to the Left value if present, returning the result.
+/// If the Either is Right, returns the Right value unchanged.
+/// This is a monadic bind operation for the Left side.
+///
+/// ```mbt
+/// let left : Either[Int, String] = Left(5)
+/// let result = left.left_and_then(x => if x > 0 { Left(x * 2) } else { Right("negative") })
+/// assert_true(result is Left(10))
+///
+/// let right : Either[Int, String] = Right("hello")
+/// let result = right.left_and_then(x => Left(x * 2))
+/// assert_true(result is Right("hello"))
+/// ```
 pub fn[L, R, S] Either::left_and_then(
   self : Self[L, R],
   f : (L) -> Either[S, R] raise?,
@@ -545,6 +558,19 @@ pub fn[L, R, S] Either::left_and_then(
 }
 
 ///|
+/// Applies a function to the Right value if present, returning the result.
+/// If the Either is Left, returns the Left value unchanged.
+/// This is a monadic bind operation for the Right side.
+///
+/// ```mbt
+/// let right : Either[String, Int] = Right(5)
+/// let result = right.right_and_then(x => if x > 0 { Right(x * 2) } else { Left("negative") })
+/// assert_true(result is Right(10))
+///
+/// let left : Either[String, Int] = Left("error")
+/// let result2 = left.right_and_then(x => Right(x * 2))
+/// assert_true(result2 is Left("error"))
+/// ```
 pub fn[L, R, S] Either::right_and_then(
   self : Self[L, R],
   f : (R) -> Either[L, S] raise?,
@@ -556,6 +582,22 @@ pub fn[L, R, S] Either::right_and_then(
 }
 
 ///|
+/// Factors out None values from an Either containing Options.
+/// If either side is None, returns None. Otherwise, returns Some with the Either containing the unwrapped values.
+///
+/// ```mbt
+/// let left_some : Either[Int?, String?] = Left(Some(42))
+/// let result1 = left_some.factor_none()
+/// assert_true(result1 is Some(Left(42)))
+///
+/// let left_none : Either[Int?, String?] = Left(None)
+/// let result2 = left_none.factor_none()
+/// assert_true(result2 is None)
+///
+/// let right_some : Either[Int?, String?] = Right(Some("hello"))
+/// let result3 = right_some.factor_none()
+/// assert_true(result3 is Some(Right("hello")))
+/// ```
 pub fn[L, R] Either::factor_none(self : Self[L?, R?]) -> Either[L, R]? {
   match self {
     Left(Some(l)) => Some(Left(l))
@@ -566,6 +608,22 @@ pub fn[L, R] Either::factor_none(self : Self[L?, R?]) -> Either[L, R]? {
 }
 
 ///|
+/// Factors out error values from an Either containing Results with the same error type.
+/// If either side is an Err, returns Err with that error. Otherwise, returns Ok with the Either containing the unwrapped values.
+///
+/// ```mbt
+/// let left_ok : Either[Result[Int, String], Result[Bool, String]] = Left(Ok(42))
+/// let result1 = left_ok.factor_err()
+/// assert_true(result1 is Ok(Left(42)))
+///
+/// let left_err : Either[Result[Int, String], Result[Bool, String]] = Left(Err("error"))
+/// let result2 = left_err.factor_err()
+/// assert_true(result2 is Err("error"))
+///
+/// let right_ok : Either[Result[Int, String], Result[Bool, String]] = Right(Ok(true))
+/// let result3 = right_ok.factor_err()
+/// assert_true(result3 is Ok(Right(true)))
+/// ```
 pub fn[L, R, E] Either::factor_err(
   self : Self[Result[L, E], Result[R, E]],
 ) -> Result[Either[L, R], E] {
@@ -578,6 +636,22 @@ pub fn[L, R, E] Either::factor_err(
 }
 
 ///|
+/// Factors out Ok values from an Either containing Results with the same Ok type.
+/// If either side is Ok, returns Ok with that value. Otherwise, returns Err with Either containing the error values.
+///
+/// ```mbt
+/// let left_ok : Either[Result[Int, String], Result[Int, Bool]] = Left(Ok(42))
+/// let result1 = left_ok.factor_ok()
+/// assert_true(result1 is Ok(42))
+///
+/// let left_err : Either[Result[Int, String], Result[Int, Bool]] = Left(Err("error"))
+/// let result2 = left_err.factor_ok()
+/// assert_true(result2 is Err(Left("error")))
+///
+/// let right_err : Either[Result[Int, String], Result[Int, Bool]] = Right(Err(false))
+/// let result3 = right_err.factor_ok()
+/// assert_true(result3 is Err(Right(false)))
+/// ```
 pub fn[T, L, R] Either::factor_ok(
   self : Self[Result[T, L], Result[T, R]],
 ) -> Result[T, Either[L, R]] {
@@ -590,6 +664,20 @@ pub fn[T, L, R] Either::factor_ok(
 }
 
 ///|
+/// Factors out the first element from an Either containing tuples with the same first type.
+/// Returns a tuple with the common first element and an Either containing the second elements.
+///
+/// ```mbt
+/// let left_pair : Either[(Int, String), (Int, Bool)] = Left((42, "hello"))
+/// let result1 = left_pair.factor_first()
+/// assert_eq(result1.0, 42)
+/// assert_true(result1.1 is Left("hello"))
+///
+/// let right_pair : Either[(Int, String), (Int, Bool)] = Right((42, true))
+/// let result2 = right_pair.factor_first()
+/// assert_eq(result2.0, 42)
+/// assert_true(result2.1 is Right(true))
+/// ```
 pub fn[T, L, R] Either::factor_first(
   self : Self[(T, L), (T, R)],
 ) -> (T, Self[L, R]) {
@@ -600,6 +688,20 @@ pub fn[T, L, R] Either::factor_first(
 }
 
 ///|
+/// Factors out the second element from an Either containing tuples with the same second type.
+/// Returns a tuple with an Either containing the first elements and the common second element.
+///
+/// ```mbt
+/// let left_pair : Either[(String, Int), (Bool, Int)] = Left(("hello", 42))
+/// let result1 = left_pair.factor_second()
+/// assert_true(result1.0 is Left("hello"))
+/// assert_eq(result1.1, 42)
+///
+/// let right_pair : Either[(String, Int), (Bool, Int)] = Right((true, 42))
+/// let result2 = right_pair.factor_second()
+/// assert_true(result2.0 is Right(true))
+/// assert_eq(result2.1, 42)
+/// ```
 pub fn[T, L, R] Either::factor_second(
   self : Self[(L, T), (R, T)],
 ) -> (Self[L, R], T) {
@@ -610,6 +712,15 @@ pub fn[T, L, R] Either::factor_second(
 }
 
 ///|
+/// Partitions an array of Either values into separate arrays of Left and Right values.
+/// Returns a tuple containing an array of all Left values and an array of all Right values.
+///
+/// ```mbt
+/// let eithers : Array[Either[Int, String]] = [Left(1), Right("a"), Left(2), Right("b"), Left(3)]
+/// let (lefts, rights) = partition(eithers)
+/// assert_eq(lefts, [1, 2, 3])
+/// assert_eq(rights, ["a", "b"])
+/// ```
 pub fn[L, R] partition(eithers : Array[Either[L, R]]) -> (Array[L], Array[R]) {
   let larr : Array[L] = Array::new()
   let rarr : Array[R] = Array::new()
@@ -621,7 +732,19 @@ pub fn[L, R] partition(eithers : Array[Either[L, R]]) -> (Array[L], Array[R]) {
 }
 
 ///|
-#alias(left_collect)
+/// Collects all Left values from an array of Either values into a new array.
+/// Right values are ignored.
+///
+/// ```mbt
+/// let eithers : Array[Either[Int, String]] = [Left(1), Right("a"), Left(2), Right("b"), Left(3)]
+/// let lefts = collect_lefts(eithers)
+/// assert_eq(lefts, [1, 2, 3])
+///
+/// let all_rights : Array[Either[Int, String]] = [Right("a"), Right("b")]
+/// let no_lefts = collect_lefts(all_rights)
+/// assert_eq(no_lefts, [])
+/// ```
+#alias(lefts_collect)
 pub fn[L, R] collect_lefts(eithers : Array[Either[L, R]]) -> Array[L] {
   let larr : Array[L] = Array::new()
   eithers.each(e => match e {
@@ -632,7 +755,19 @@ pub fn[L, R] collect_lefts(eithers : Array[Either[L, R]]) -> Array[L] {
 }
 
 ///|
-#alias(right_collect)
+/// Collects all Right values from an array of Either values into a new array.
+/// Left values are ignored.
+///
+/// ```mbt
+/// let eithers : Array[Either[Int, String]] = [Left(1), Right("a"), Left(2), Right("b"), Left(3)]
+/// let rights = collect_rights(eithers)
+/// assert_eq(rights, ["a", "b"])
+///
+/// let all_lefts : Array[Either[Int, String]] = [Left(1), Left(2)]
+/// let no_rights = collect_rights(all_lefts)
+/// assert_eq(no_rights, [])
+/// ```
+#alias(rights_collect)
 pub fn[L, R] collect_rights(eithers : Array[Either[L, R]]) -> Array[R] {
   let rarr : Array[R] = Array::new()
   eithers.each(e => match e {
