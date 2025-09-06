@@ -5,6 +5,77 @@ pub(all) enum Either[L, R] {
   Right(R)
 } derive(Show, Eq, Hash)
 
+///|
+/// Creates a new Left variant of Either.
+///
+/// ```mbt
+/// let left: Either[Int, String] = left(123)
+/// assert_true(left is Left(123))
+/// ```
+pub fn[L, R] left(l: L) -> Either[L, R] {
+  Left(l)
+}
+
+///|
+/// Creates a new Right variant of Either.
+///
+/// ```mbt
+/// let right: Either[Int, String] = right("hello")
+/// assert_true(right is Right("hello"))
+/// ```
+pub fn[L, R] right(r: R) -> Either[L, R] {
+  Right(r)
+}
+
+pub fn[L, R] from_option_left(v: L?) -> Either[L, R] {
+  match v {
+    Some(l) => Left(l)
+    None => abort("Cannot create Either from None")
+  }
+}
+
+pub fn[L, R] from_option_right(v: R?) -> Either[L, R] {
+  match v {
+    Some(r) => Right(r)
+    None => abort("Cannot create Either from None")
+  }
+}
+
+pub fn[L, R] from_option_left_or(v: L?, default: R) -> Either[L, R] {
+  match v {
+    Some(l) => Left(l)
+    None => Right(default)
+  }
+}
+
+pub fn[L, R] from_option_right_or(v: R?, default: L) -> Either[L, R] {
+  match v {
+    Some(r) => Right(r)
+    None => Left(default)
+  }
+}
+
+pub fn[L, R] from_option_left_or_else(v: L?, f: () -> R raise?) -> Either[L, R] raise? {
+  match v {
+    Some(l) => Left(l)
+    None => Right(f())
+  }
+}
+
+pub fn[L, R] from_option_right_or_else(v: R?, f: () -> L raise?) -> Either[L, R] raise? {
+  match v {
+    Some(r) => Right(r)
+    None => Left(f())
+  }
+}
+
+pub fn[L, R] from_result(r: Result[R, L]) -> Either[L, R] {
+  match r {
+    Ok(v) => Right(v)
+    Err(e) => Left(e)
+  }
+}
+
 ///| 
 /// Returns true if the Either is a Left variant.
 ///
@@ -76,6 +147,14 @@ pub fn[L, R] Either::right(self: Self[L, R]) -> R? {
   match self {
     Left(_) => None
     Right(r) => Some(r)
+  }
+}
+
+///|
+pub fn[L, R] Either::to_result(self: Self[L, R]) -> Result[R, L] {
+  match self {
+    Left(l) => Err(l)
+    Right(r) => Ok(r)
   }
 }
 
@@ -202,6 +281,13 @@ pub fn[L, R, U] Either::map_right(self: Self[L, R], f: (R) -> U raise?) -> Self[
   }
 }
 
+pub fn[T] Either::map(self: Self[T, T], f: (T) -> T raise?) -> Self[T, T] raise? {
+  match self {
+    Left(l) => Left(f(l))
+    Right(r) => Right(f(r))
+  }
+}
+
 ///|
 /// Apply the functions `f` and `g` to the `Left` and `Right` variants respectively.
 ///
@@ -221,6 +307,14 @@ pub fn[L, ML, R, MR] Either::map_either(self: Self[L, R], fl: (L) -> ML raise?, 
   match self {
     Left(l) => Left(fl(l))
     Right(r) => Right(fr(r))
+  }
+}
+
+///|
+pub fn[L, R, T] Either::either(self: Self[L, R], fl: (L) -> T raise?, fr: (R) -> T raise?) -> T raise? {
+  match self {
+    Left(l) => fl(l)
+    Right(r) => fr(r)
   }
 }
 
