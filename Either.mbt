@@ -532,3 +532,96 @@ pub fn[L, R, T] Either::either(
     Right(r) => fr(r)
   }
 }
+
+pub fn[L, R, S] Either::left_and_then(self: Self[L, R], f: (L) -> Either[S, R] raise?) -> Either[S, R] raise? {
+  match self {
+    Left(l) => f(l)
+    Right(r) => Right(r)
+  }
+}
+
+pub fn[L, R, S] Either::right_and_then(self: Self[L, R], f: (R) -> Either[L, S] raise?) -> Either[L, S] raise? {
+  match self {
+    Left(l) => Left(l)
+    Right(r) => f(r)
+  }
+}
+
+pub fn[L, R] Either::factor_none(self: Self[L?, R?]) -> Either[L, R]? {
+  match self {
+    Left(Some(l)) => Some(Left(l))
+    Left(None) => None
+    Right(Some(r)) => Some(Right(r))
+    Right(None) => None
+  }
+}
+
+pub fn[L, R, E] Either::factor_err(self: Self[Result[L, E], Result[R, E]]) -> Result[Either[L, R], E] {
+  match self {
+    Left(Ok(l)) => Ok(Left(l))
+    Left(Err(e)) => Err(e)
+    Right(Ok(r)) => Ok(Right(r))
+    Right(Err(e)) => Err(e)
+  }
+}
+
+pub fn[T, L, R] Either::factor_ok(self: Self[Result[T, L], Result[T, R]]) -> Result[T, Either[L, R]] {
+  match self {
+    Left(Ok(t)) => Ok(t)
+    Left(Err(l)) => Err(Left(l))
+    Right(Ok(t)) => Ok(t)
+    Right(Err(r)) => Err(Right(r))
+  }
+}
+
+pub fn[T, L, R] Either::factor_first(self: Self[(T, L), (T, R)]) -> (T, Self[L, R]) {
+  match self {
+    Left((t, l)) => (t, Left(l))
+    Right((t, r)) => (t, Right(r))
+  }
+}
+
+pub fn[T, L, R] Either::factor_second(self: Self[(L, T), (R, T)]) -> (Self[L, R], T) {
+  match self {
+    Left((l, t)) => (Left(l), t)
+    Right((r, t)) => (Right(r), t)
+  }
+}
+
+
+pub fn[L, R] partition(eithers: Array[Either[L, R]]) ->(Array[L], Array[R]) {
+  let larr : Array[L] = Array::new()
+  let rarr : Array[R] = Array::new()
+
+  eithers.each(e => {
+    match e {
+      Left(l) => larr.push(l)
+      Right(r) => rarr.push(r)
+    }
+  })
+  (larr, rarr)
+}
+
+#alias(left_collect)
+pub fn[L, R] collect_lefts(eithers: Array[Either[L, R]]) -> Array[L] {
+  let larr : Array[L] = Array::new()
+  eithers.each(e => {
+    match e {
+      Left(l) => larr.push(l)
+      Right(_) => ()
+    }
+  })
+  larr
+}
+
+#alias(right_collect)
+pub fn[L, R] collect_rights(eithers: Array[Either[L, R]]) -> Array[R] {
+  let rarr : Array[R] = Array::new()
+  eithers.each(e => {
+    match e {
+      Left(_) => ()
+      Right(r) => rarr.push(r)
+    }
+  })
+  rarr
+}
