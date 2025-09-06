@@ -1,0 +1,59 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Kaida-Amethyst/either"
+
+// Values
+fn[L, R] from_option_left(L?) -> Either[L, R]
+
+fn[L, R] from_option_left_or(L?, R) -> Either[L, R]
+
+fn[L, R] from_option_left_or_else(L?, () -> R raise?) -> Either[L, R] raise?
+
+fn[L, R] from_option_right(R?) -> Either[L, R]
+
+fn[L, R] from_option_right_or(R?, L) -> Either[L, R]
+
+fn[L, R] from_option_right_or_else(R?, () -> L raise?) -> Either[L, R] raise?
+
+fn[L, R] from_result(Result[R, L]) -> Either[L, R]
+
+fn[L, R] left(L) -> Either[L, R]
+
+fn[L, R] right(R) -> Either[L, R]
+
+// Errors
+
+// Types and methods
+pub(all) enum Either[L, R] {
+  Left(L)
+  Right(R)
+}
+fn[L, R, T] Either::either(Self[L, R], (L) -> T raise?, (R) -> T raise?) -> T raise?
+fn[L, R] Either::expect_left(Self[L, R], String) -> L
+fn[L, R] Either::expect_right(Self[L, R], String) -> R
+fn[L, R] Either::flip(Self[L, R]) -> Self[R, L]
+fn[L, R] Either::is_left(Self[L, R]) -> Bool
+fn[L, R] Either::is_right(Self[L, R]) -> Bool
+fn[L, R] Either::left(Self[L, R]) -> L?
+fn[L, R] Either::left_or(Self[L, R], L) -> L
+fn[L, R] Either::left_or_else(Self[L, R], () -> L raise?) -> L raise?
+#alias(unwrap_left)
+fn[L, R] Either::left_unwrap(Self[L, R]) -> L
+fn[T] Either::map(Self[T, T], (T) -> T raise?) -> Self[T, T] raise?
+#alias(bimap)
+fn[L, ML, R, MR] Either::map_either(Self[L, R], (L) -> ML raise?, (R) -> MR raise?) -> Self[ML, MR] raise?
+fn[L, R, U] Either::map_left(Self[L, R], (L) -> U raise?) -> Self[U, R] raise?
+fn[L, R, U] Either::map_right(Self[L, R], (R) -> U raise?) -> Self[L, U] raise?
+fn[L, R] Either::right(Self[L, R]) -> R?
+fn[L, R] Either::right_or(Self[L, R], R) -> R
+fn[L, R] Either::right_or_else(Self[L, R], () -> R raise?) -> R raise?
+#alias(unwrap_right)
+fn[L, R] Either::right_unwrap(Self[L, R]) -> R
+fn[L, R] Either::to_result(Self[L, R]) -> Result[R, L]
+impl[L : Eq, R : Eq] Eq for Either[L, R]
+impl[L : Hash, R : Hash] Hash for Either[L, R]
+impl[L : Show, R : Show] Show for Either[L, R]
+
+// Type aliases
+
+// Traits
+
