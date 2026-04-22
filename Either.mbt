@@ -3,7 +3,7 @@
 pub(all) enum Either[L, R] {
   Left(L)
   Right(R)
-} derive(Show, Eq, Hash)
+} derive(Debug, Eq, Hash)
 
 ///|
 /// Creates a new Left variant of Either.
