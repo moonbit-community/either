@@ -68,6 +68,7 @@ pub fn[L, R] Either::right_or_else(Self[L, R], () -> R raise?) -> R raise?
 #alias(unwrap_right)
 pub fn[L, R] Either::right_unwrap(Self[L, R]) -> R
 pub fn[L, R] Either::to_result(Self[L, R]) -> Result[R, L]
+pub impl[L : Show, R : Show] Show for Either[L, R]
 
 // Type aliases
 

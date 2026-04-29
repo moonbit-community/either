@@ -6,6 +6,22 @@ pub(all) enum Either[L, R] {
 } derive(Debug, Eq, Hash)
 
 ///|
+pub impl[L : Show, R : Show] Show for Either[L, R] with output(self, logger) {
+  match self {
+    Left(l) => {
+      logger.write_string("Left(")
+      logger.write_object(l)
+      logger.write_string(")")
+    }
+    Right(r) => {
+      logger.write_string("Right(")
+      logger.write_object(r)
+      logger.write_string(")")
+    }
+  }
+}
+
+///|
 /// Creates a new Left variant of Either.
 ///
 /// ```mbt nocheck
