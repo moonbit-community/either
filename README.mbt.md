@@ -10,7 +10,7 @@ The `Either` type is a simple but powerful sum type that can hold one of two pos
 
 ### Creating Either Values
 
-```moonbit nocheck
+```mbt check
 ///|
 test "creating either values" {
   // Create Left and Right values
@@ -30,7 +30,7 @@ test "creating either values" {
 
 ### Checking Either Variants
 
-```moonbit nocheck
+```mbt check
 ///|
 test "checking variants" {
   let values : Array[Either[Int, String]] = [Left(1), Right("two"), Left(3)]
@@ -49,7 +49,7 @@ test "checking variants" {
 
 ### Extracting Values
 
-```moonbit nocheck
+```mbt check
 ///|
 test "extracting values" {
   let left_val : Either[Int, String] = Either::Left(42)
@@ -73,7 +73,7 @@ test "extracting values" {
 
 ### Mapping Operations
 
-```moonbit nocheck
+```mbt check
 ///|
 test "mapping operations" {
   let left : Either[Int, String] = Left(10)
@@ -95,7 +95,7 @@ test "mapping operations" {
 
 ### Type Conversions
 
-```moonbit nocheck
+```mbt check
 ///|
 test "type conversions" {
   // From Option
@@ -127,7 +127,7 @@ test "type conversions" {
 
 ## Utility Operations
 
-```moonbit nocheck
+```mbt check
 ///|
 test "utility operations" {
   let left : Either[Int, String] = Left(42)
@@ -152,7 +152,7 @@ test "utility operations" {
 
 ## Advanced Usage
 
-```moonbit nocheck
+```mbt check
 ///|
 test "advanced usage" {
   // Chain operations
@@ -176,8 +176,11 @@ test "advanced usage" {
     }
   }
 
-  assert_eq(lefts, [1, 3])
-  assert_eq(rights, ["two"])
+  assert_eq(lefts.length(), 2)
+  assert_eq(lefts[0], 1)
+  assert_eq(lefts[1], 3)
+  assert_eq(rights.length(), 1)
+  assert_eq(rights[0], "two")
 }
 ```
 
@@ -208,9 +211,9 @@ This library makes it easy to work with sum types in a functional programming st
 
 ### 创建 Either 值
 
-```moonbit nocheck
+```mbt check
 ///|
-test "creating either values" {
+test "creating either values zh" {
   // 创建 Left 和 Right 值
   let left_val : Either[Int, String] = left(42)
   let right_val : Either[Int, String] = right("hello")
@@ -228,9 +231,9 @@ test "creating either values" {
 
 ### 检查 Either 变体
 
-```moonbit nocheck
+```mbt check
 ///|
-test "checking variants" {
+test "checking variants zh" {
   let values : Array[Either[Int, String]] = [Left(1), Right("two"), Left(3)]
 
   // 使用 is_left() 和 is_right()
@@ -247,9 +250,9 @@ test "checking variants" {
 
 ### 提取值
 
-```moonbit nocheck
+```mbt check
 ///|
-test "extracting values" {
+test "extracting values zh" {
   let left_val : Either[Int, String] = Either::Left(42)
   let right_val : Either[Int, String] = Either::Right("hello")
 
@@ -271,9 +274,9 @@ test "extracting values" {
 
 ### 映射操作
 
-```moonbit nocheck
+```mbt check
 ///|
-test "mapping operations" {
+test "mapping operations zh" {
   let left : Either[Int, String] = Left(10)
   let right : Either[Int, String] = Right("hello")
 
@@ -293,9 +296,9 @@ test "mapping operations" {
 
 ### 类型转换
 
-```moonbit nocheck
+```mbt check
 ///|
-test "type conversions" {
+test "type conversions zh" {
   // 从 Option
   let some_val : Int? = Some(42)
   let none_val : Int? = None
@@ -325,9 +328,9 @@ test "type conversions" {
 
 ## 实用操作
 
-```moonbit nocheck
+```mbt check
 ///|
-test "utility operations" {
+test "utility operations zh" {
   let left : Either[Int, String] = Left(42)
   let right : Either[Int, String] = Right("hello")
 
@@ -350,9 +353,9 @@ test "utility operations" {
 
 ## 高级用法
 
-```moonbit nocheck
+```mbt check
 ///|
-test "advanced usage" {
+test "advanced usage zh" {
   // 链式操作
   let result = Left(5)
     |> Either::map_left(x => x * 2) // Left(10)
@@ -374,8 +377,11 @@ test "advanced usage" {
     }
   }
 
-  assert_eq(lefts, [1, 3])
-  assert_eq(rights, ["two"])
+  assert_eq(lefts.length(), 2)
+  assert_eq(lefts[0], 1)
+  assert_eq(lefts[1], 3)
+  assert_eq(rights.length(), 1)
+  assert_eq(rights[0], "two")
 }
 ```
 
