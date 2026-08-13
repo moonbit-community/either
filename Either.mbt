@@ -6,7 +6,7 @@ pub(all) enum Either[L, R] {
 } derive(Debug, Eq, Hash)
 
 ///|
-pub impl[L : Show, R : Show] Show for Either[L, R] with output(self, logger) {
+pub impl[L : Show, R : Show] Show for Either[L, R] with fn output(self, logger) {
   match self {
     Left(l) => {
       logger.write_string("Left(")
