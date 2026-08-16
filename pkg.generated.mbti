@@ -40,6 +40,7 @@ pub(all) enum Either[L, R] {
   Right(R)
 } derive(Eq, Hash, @debug.Debug)
 pub fn[L, R, T] Either::either(Self[L, R], (L) -> T raise?, (R) -> T raise?) -> T raise?
+pub fn[L : Eq, R : Eq] Either::equal(Self[L, R], Self[L, R]) -> Bool
 pub fn[L, R] Either::expect_left(Self[L, R], String) -> L
 pub fn[L, R] Either::expect_right(Self[L, R], String) -> R
 pub fn[L, R, E] Either::factor_err(Self[Result[L, E], Result[R, E]]) -> Result[Self[L, R], E]
@@ -48,6 +49,8 @@ pub fn[L, R] Either::factor_none(Self[L?, R?]) -> Self[L, R]?
 pub fn[T, L, R] Either::factor_ok(Self[Result[T, L], Result[T, R]]) -> Result[T, Self[L, R]]
 pub fn[T, L, R] Either::factor_second(Self[(L, T), (R, T)]) -> (Self[L, R], T)
 pub fn[L, R] Either::flip(Self[L, R]) -> Self[R, L]
+pub fn[L : Hash, R : Hash] Either::hash(Self[L, R]) -> Int
+pub fn[L : Hash, R : Hash] Either::hash_combine(Self[L, R], Hasher) -> Unit
 pub fn[L, R] Either::is_left(Self[L, R]) -> Bool
 pub fn[L, R] Either::is_right(Self[L, R]) -> Bool
 pub fn[L, R] Either::left(Self[L, R]) -> L?
@@ -61,13 +64,17 @@ pub fn[T] Either::map(Self[T, T], (T) -> T raise?) -> Self[T, T] raise?
 pub fn[L, ML, R, MR] Either::map_either(Self[L, R], (L) -> ML raise?, (R) -> MR raise?) -> Self[ML, MR] raise?
 pub fn[L, R, U] Either::map_left(Self[L, R], (L) -> U raise?) -> Self[U, R] raise?
 pub fn[L, R, U] Either::map_right(Self[L, R], (R) -> U raise?) -> Self[L, U] raise?
+pub fn[L : Eq, R : Eq] Either::not_equal(Self[L, R], Self[L, R]) -> Bool
+pub fn[L : Show, R : Show] Either::output(Self[L, R], &Logger) -> Unit
 pub fn[L, R] Either::right(Self[L, R]) -> R?
 pub fn[L, R, S] Either::right_and_then(Self[L, R], (R) -> Self[L, S] raise?) -> Self[L, S] raise?
 pub fn[L, R] Either::right_or(Self[L, R], R) -> R
 pub fn[L, R] Either::right_or_else(Self[L, R], () -> R raise?) -> R raise?
 #alias(unwrap_right)
 pub fn[L, R] Either::right_unwrap(Self[L, R]) -> R
+pub fn[L : @debug.Debug, R : @debug.Debug] Either::to_repr(Self[L, R]) -> @debug.Repr
 pub fn[L, R] Either::to_result(Self[L, R]) -> Result[R, L]
+pub fn[L : Show, R : Show] Either::to_string(Self[L, R]) -> String
 pub impl[L : Show, R : Show] Show for Either[L, R]
 
 // Type aliases
