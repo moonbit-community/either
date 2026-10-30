@@ -49,7 +49,7 @@ pub fn[L, R] Either::factor_none(Self[L?, R?]) -> Self[L, R]?
 pub fn[T, L, R] Either::factor_ok(Self[Result[T, L], Result[T, R]]) -> Result[T, Self[L, R]]
 pub fn[T, L, R] Either::factor_second(Self[(L, T), (R, T)]) -> (Self[L, R], T)
 pub fn[L, R] Either::flip(Self[L, R]) -> Self[R, L]
-pub fn[L : Hash, R : Hash] Either::hash(Self[L, R]) -> Int
+pub fn[L : Hash, R : Hash] Either::hash(Self[L, R]) -> Int32
 pub fn[L : Hash, R : Hash] Either::hash_combine(Self[L, R], Hasher) -> Unit
 pub fn[L, R] Either::is_left(Self[L, R]) -> Bool
 pub fn[L, R] Either::is_right(Self[L, R]) -> Bool

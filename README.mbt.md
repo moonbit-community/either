@@ -14,11 +14,11 @@ The `Either` type is a simple but powerful sum type that can hold one of two pos
 ///|
 test "creating either values" {
   // Create Left and Right values
-  let left_val : Either[Int, String] = left(42)
-  let right_val : Either[Int, String] = right("hello")
+  let left_val : Either[Int32, String] = left(42)
+  let right_val : Either[Int32, String] = right("hello")
 
   // Using constructors directly
-  let left_direct : Either[Int, Unit] = Left(42)
+  let left_direct : Either[Int32, Unit] = Left(42)
   let right_direct : Either[Unit, String] = Right("hello")
 
   assert_true(left_val is Left(42))
@@ -33,7 +33,7 @@ test "creating either values" {
 ```moonbit nocheck
 ///|
 test "checking variants" {
-  let values : Array[Either[Int, String]] = [Left(1), Right("two"), Left(3)]
+  let values : Array[Either[Int32, String]] = [Left(1), Right("two"), Left(3)]
 
   // Using is_left() and is_right()
   assert_true(values[0].is_left())
@@ -52,8 +52,8 @@ test "checking variants" {
 ```moonbit nocheck
 ///|
 test "extracting values" {
-  let left_val : Either[Int, String] = Either::Left(42)
-  let right_val : Either[Int, String] = Either::Right("hello")
+  let left_val : Either[Int32, String] = Either::Left(42)
+  let right_val : Either[Int32, String] = Either::Right("hello")
 
   // Extract as Option
   assert_true(left_val.left() is Some(42))
@@ -76,8 +76,8 @@ test "extracting values" {
 ```moonbit nocheck
 ///|
 test "mapping operations" {
-  let left : Either[Int, String] = Left(10)
-  let right : Either[Int, String] = Right("hello")
+  let left : Either[Int32, String] = Left(10)
+  let right : Either[Int32, String] = Right("hello")
 
   // Map left side only
   let mapped_left = left.map_left(x => x * 2)
@@ -99,8 +99,8 @@ test "mapping operations" {
 ///|
 test "type conversions" {
   // From Option
-  let some_val : Int? = Some(42)
-  let none_val : Int? = None
+  let some_val : Int32? = Some(42)
+  let none_val : Int32? = None
 
   let either_from_some = from_option_left_or(some_val, "default")
   assert_true(either_from_some is Left(42))
@@ -109,8 +109,8 @@ test "type conversions" {
   assert_true(either_from_none is Right("default"))
 
   // From Result
-  let ok_result : Result[String, Int] = Ok("success")
-  let err_result : Result[String, Int] = Err(404)
+  let ok_result : Result[String, Int32] = Ok("success")
+  let err_result : Result[String, Int32] = Err(404)
 
   let either_ok = from_result(ok_result)
   assert_true(either_ok is Right("success"))
@@ -119,7 +119,7 @@ test "type conversions" {
   assert_true(either_err is Left(404))
 
   // To Result
-  let left_either : Either[Int, String] = Left(404)
+  let left_either : Either[Int32, String] = Left(404)
   let result_from_either = left_either.to_result()
   assert_true(result_from_either is Err(404))
 }
@@ -130,8 +130,8 @@ test "type conversions" {
 ```moonbit nocheck
 ///|
 test "utility operations" {
-  let left : Either[Int, String] = Left(42)
-  let right : Either[Int, String] = Right("hello")
+  let left : Either[Int32, String] = Left(42)
+  let right : Either[Int32, String] = Right("hello")
 
   // Flip Left and Right
   assert_true(left.flip() is Right(42))
@@ -165,7 +165,7 @@ test "advanced usage" {
   assert_true(result is Right(15))
 
   // Combining with control flow
-  let values : Array[Either[Int, String]] = [Left(1), Right("two"), Left(3)]
+  let values : Array[Either[Int32, String]] = [Left(1), Right("two"), Left(3)]
   let lefts = []
   let rights = []
 
@@ -212,11 +212,11 @@ This library makes it easy to work with sum types in a functional programming st
 ///|
 test "creating either values" {
   // 创建 Left 和 Right 值
-  let left_val : Either[Int, String] = left(42)
-  let right_val : Either[Int, String] = right("hello")
+  let left_val : Either[Int32, String] = left(42)
+  let right_val : Either[Int32, String] = right("hello")
 
   // 直接使用构造函数
-  let left_direct : Either[Int, Unit] = Left(42)
+  let left_direct : Either[Int32, Unit] = Left(42)
   let right_direct : Either[Unit, String] = Right("hello")
 
   assert_true(left_val is Left(42))
@@ -231,7 +231,7 @@ test "creating either values" {
 ```moonbit nocheck
 ///|
 test "checking variants" {
-  let values : Array[Either[Int, String]] = [Left(1), Right("two"), Left(3)]
+  let values : Array[Either[Int32, String]] = [Left(1), Right("two"), Left(3)]
 
   // 使用 is_left() 和 is_right()
   assert_true(values[0].is_left())
@@ -250,8 +250,8 @@ test "checking variants" {
 ```moonbit nocheck
 ///|
 test "extracting values" {
-  let left_val : Either[Int, String] = Either::Left(42)
-  let right_val : Either[Int, String] = Either::Right("hello")
+  let left_val : Either[Int32, String] = Either::Left(42)
+  let right_val : Either[Int32, String] = Either::Right("hello")
 
   // 提取为 Option
   assert_true(left_val.left() is Some(42))
@@ -274,8 +274,8 @@ test "extracting values" {
 ```moonbit nocheck
 ///|
 test "mapping operations" {
-  let left : Either[Int, String] = Left(10)
-  let right : Either[Int, String] = Right("hello")
+  let left : Either[Int32, String] = Left(10)
+  let right : Either[Int32, String] = Right("hello")
 
   // 只映射 left
   let mapped_left = left.map_left(x => x * 2)
@@ -297,8 +297,8 @@ test "mapping operations" {
 ///|
 test "type conversions" {
   // 从 Option
-  let some_val : Int? = Some(42)
-  let none_val : Int? = None
+  let some_val : Int32? = Some(42)
+  let none_val : Int32? = None
 
   let either_from_some = from_option_left_or(some_val, "default")
   assert_true(either_from_some is Left(42))
@@ -307,8 +307,8 @@ test "type conversions" {
   assert_true(either_from_none is Right("default"))
 
   // 从 Result
-  let ok_result : Result[String, Int] = Ok("success")
-  let err_result : Result[String, Int] = Err(404)
+  let ok_result : Result[String, Int32] = Ok("success")
+  let err_result : Result[String, Int32] = Err(404)
 
   let either_ok = from_result(ok_result)
   assert_true(either_ok is Right("success"))
@@ -317,7 +317,7 @@ test "type conversions" {
   assert_true(either_err is Left(404))
 
   // 转换为 Result
-  let left_either : Either[Int, String] = Left(404)
+  let left_either : Either[Int32, String] = Left(404)
   let result_from_either = left_either.to_result()
   assert_true(result_from_either is Err(404))
 }
@@ -328,8 +328,8 @@ test "type conversions" {
 ```moonbit nocheck
 ///|
 test "utility operations" {
-  let left : Either[Int, String] = Left(42)
-  let right : Either[Int, String] = Right("hello")
+  let left : Either[Int32, String] = Left(42)
+  let right : Either[Int32, String] = Right("hello")
 
   // 翻转 Left 和 Right
   assert_true(left.flip() is Right(42))
@@ -363,7 +363,7 @@ test "advanced usage" {
   assert_true(result is Right(15))
 
   // 与控制流结合
-  let values : Array[Either[Int, String]] = [Left(1), Right("two"), Left(3)]
+  let values : Array[Either[Int32, String]] = [Left(1), Right("two"), Left(3)]
   let lefts = []
   let rights = []
 
